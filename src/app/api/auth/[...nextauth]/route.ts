@@ -1,29 +1,18 @@
-import NextAuth from 'next-auth';
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
-// Note: これは仮の設定です。後で実際のプロバイダーとデータベースアダプターを設定します。
 const handler = NextAuth({
   providers: [
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_ID!,
-    //   clientSecret: process.env.GOOGLE_SECRET!,
-    // }),
-    // CredentialsProvider({
-    //   name: 'Credentials',
-    //   credentials: {
-    //     email: { label: "Email", type: "email" },
-    //     password: { label: "Password", type: "password" }
-    //   },
-    //   async authorize(credentials) {
-    //     // Here we would validate credentials
-    //     return null;
-    //   }
-    // })
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   pages: {
-    signIn: '/auth/signin',
+    signIn: "/login",
   },
 });
 

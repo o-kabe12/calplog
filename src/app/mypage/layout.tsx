@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import { Providers } from "./component/providers";
+import "../globals.css";
+import { Providers } from "../component/providers";
 
 export const metadata: Metadata = {
-  title: "CalPlog - TOP",
+  title: "CalPlog - MY Page",
   description: "カロリーとタンパク質を簡単に計算・記録できるアプリです。",
 };
 
@@ -13,10 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <Providers>{children}</Providers>
-      </body>
+    <html lang="ja">
+      <Providers>
+        {children}
+      </Providers>
     </html>
   );
 }

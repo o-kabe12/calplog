@@ -8,14 +8,17 @@ const STORAGE_KEY = `calplog_entries_${today}`;
 const STORAGE_FREE_KEY = `calplog_freeEntries_${today}`;
 
 export default function FoodCalculator() {
+
   // プルダウン入力行
   const [entries, setEntries] = useState([
     { foodId: sampleFoods[0]?.id || "", grams: "", units: "" }
   ]);
+
   // 自由入力行
   const [freeEntries, setFreeEntries] = useState([
     { name: "", calories: "", protein: "" }
   ]);
+
   const [result, setResult] = useState<{ calories: number; protein: number } | null>(null);
 
   // ローカルストレージから復元
@@ -102,9 +105,9 @@ export default function FoodCalculator() {
             const food = sampleFoods.find(f => f.id === entry.foodId);
             const isUnit = food && food.unitType === '個';
             return (
-              <div key={index} className="flex items-center gap-2">
+              <div key={index} className="flex items-center gap-2 flex-wrap">
                 <select
-                  className="border rounded px-2 py-1"
+                  className="border rounded px-2 py-1 w-full sm:w-auto"
                   value={entry.foodId}
                   onChange={e => handleChange(index, "foodId", e.target.value)}
                 >
