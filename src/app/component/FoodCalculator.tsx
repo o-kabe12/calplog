@@ -1,6 +1,7 @@
 "use client";
 import { sampleFoods } from "../../data/sampleFoods";
 import { useState, useEffect } from "react";
+import { SaveButton } from "./SaveButton";
 
 // 今日の日付（YYYY-MM-DD）
 const today = new Date().toISOString().slice(0, 10);
@@ -192,11 +193,14 @@ export default function FoodCalculator() {
             onClick={handleCalculate}
           >出力</button>
           {result && (
-            <div className="mt-6 w-full bg-gray-100 p-4 rounded">
-              <p className="text-lg font-bold text-center">
-                総カロリー: {result.calories} kcal ／ 総タンパク質: {result.protein} g
-              </p>
-            </div>
+            <>
+              <div className="mt-6 w-full bg-gray-100 p-4 rounded">
+                <p className="text-lg font-bold text-center">
+                  総カロリー: {result.calories} kcal ／ 総タンパク質: {result.protein} g
+                </p>
+              </div>
+              <SaveButton result={result} />
+            </>
           )}
     </div>
   );
