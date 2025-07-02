@@ -1,10 +1,20 @@
 "use client";
 import { sampleFoods } from "../../data/sampleFoods";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SaveButton } from "./SaveButton";
 
 // 今日の日付（YYYY-MM-DD）
-const today = new Date().toISOString().slice(0, 10);
+const getToday = () => {
+  if (typeof window !== "undefined") {
+    // ページ遷移時も同じ日付を維持するため、window.nameに保存
+    if (!window.name.startsWith("calplog_date_")) {
+      window.name = `calplog_date_${new Date().toISOString().slice(0, 10)}`;
+    }
+    return window.name.replace("calplog_date_", "");
+  }
+  return new Date().toISOString().slice(0, 10);
+};
+const today = getToday();
 const STORAGE_KEY = `calplog_entries_${today}`;
 const STORAGE_FREE_KEY = `calplog_freeEntries_${today}`;
 
@@ -21,21 +31,23 @@ export default function FoodCalculator() {
   ]);
 
   const [result, setResult] = useState<{ calories: number; protein: number } | null>(null);
+  const resultRef = useRef<HTMLDivElement | null>(null);
 
   // ローカルストレージから復元
   useEffect(() => {
-    const savedEntries = localStorage.getItem(STORAGE_KEY);
-    if (savedEntries) setEntries(JSON.parse(savedEntries));
-    const savedFree = localStorage.getItem(STORAGE_FREE_KEY);
-    if (savedFree) setFreeEntries(JSON.parse(savedFree));
+    if (typeof window !== "undefined") {
+      const savedEntries = window.localStorage.getItem(STORAGE_KEY);
+      if (savedEntries) setEntries(JSON.parse(savedEntries));
+      const savedFree = window.localStorage.getItem(STORAGE_FREE_KEY);
+      if (savedFree) setFreeEntries(JSON.parse(savedFree));
+    }
   }, []);
-  // ローカルストレージへ保存
-  useEffect(() => {
+
+  // ローカルストレージへ保存（出力ボタンでのみ保存）
+  const saveToLocalStorage = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-  }, [entries]);
-  useEffect(() => {
     localStorage.setItem(STORAGE_FREE_KEY, JSON.stringify(freeEntries));
-  }, [freeEntries]);
+  };
 
   // プルダウン行追加
   const addEntry = () => {
@@ -97,6 +109,10 @@ export default function FoodCalculator() {
       }
     });
     setResult({ calories: Math.round(totalCalories), protein: Math.round(totalProtein * 10) / 10 });
+    saveToLocalStorage();
+    setTimeout(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   return (
@@ -192,6 +208,7 @@ export default function FoodCalculator() {
             className="block mt-6 mx-auto bg-green-600 text-white rounded px-4 py-2 cursor-pointer hover:opacity-70 transition duration-300 ease-in-out"
             onClick={handleCalculate}
           >出力</button>
+          <div ref={resultRef} />
           {result && (
             <>
               <div className="mt-6 w-full bg-gray-100 p-4 rounded">
