@@ -3,16 +3,17 @@ import { sampleFoods } from "../../data/sampleFoods";
 import { useState, useEffect, useRef } from "react";
 import { SaveButton } from "./SaveButton";
 
-// 今日の日付（YYYY-MM-DD）
+// 今日の日付（YYYY-MM-DD、日本時間）
 const getToday = () => {
   if (typeof window !== "undefined") {
-    // ページ遷移時も同じ日付を維持するため、window.nameに保存
+    const todayStr = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" }).replaceAll("/", "-");
     if (!window.name.startsWith("calplog_date_")) {
-      window.name = `calplog_date_${new Date().toISOString().slice(0, 10)}`;
+      window.name = `calplog_date_${todayStr}`;
     }
     return window.name.replace("calplog_date_", "");
   }
-  return new Date().toISOString().slice(0, 10);
+  // SSR時も日本時間で返す
+  return new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" }).replaceAll("/", "-");
 };
 const today = getToday();
 const STORAGE_KEY = `calplog_entries_${today}`;
