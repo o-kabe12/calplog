@@ -10,7 +10,7 @@ import { getAuth } from 'firebase-admin/auth';
 // Vercelに設定する環境変数名と一致させる
 const FIREBASE_ADMIN_SDK_PROJECT_ID = process.env.FIREBASE_ADMIN_SDK_PROJECT_ID;
 const FIREBASE_ADMIN_SDK_CLIENT_EMAIL = process.env.FIREBASE_ADMIN_SDK_CLIENT_EMAIL;
-const FIREBASE_ADMIN_SDK_PRIVATE_KEY = process.env.FIREBASE_ADMIN_SDK_PRIVATE_KEY;
+const FIREBASE_ADMIN_SDK_PRIVATE_KEY = process.env.FIREBASE_ADMIN_SDK_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
 // Firebase Admin SDK を初期化する
 // getApps().length で、既に初期化されている場合はスキップする
@@ -41,6 +41,9 @@ if (!getApps().length) {
 
 // GET リクエストハンドラ
 export async function GET(req: NextRequest) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  req; // req変数を直接使うことはないが、存在することを示すための一行
+  
   try {
     // NextAuth.js のサーバーサイドセッションを取得
     const session = await getServerSession(authOptions);

@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async jwt({ token, user, account, profile }) { // ここはuserオブジェクトにemailがあれば、token.emailを設定する
+    async jwt({ token, user }) {
       if (user) {
         token.email = user.email; // userオブジェクトのemailをtokenに設定
       }
