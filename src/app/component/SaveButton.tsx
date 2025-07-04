@@ -14,7 +14,6 @@ export function SaveButton({ result }: { result: { calories: number; protein: nu
 
     const today = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" })//　記録用の日付フォーマット(xx/xx/xx)
     const formattedToday = today.replace(/\//g, "-"); // db用 YYYY-MM-DD形式に変換
-    console.log("Saving today's result:", today, result);
     try {
       await setDoc(
         doc(db, "users", session.user.email, "records", formattedToday),
