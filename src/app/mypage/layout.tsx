@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { Providers } from "../component/providers";
+import { FirebaseInitializer } from "@/components/FirebaseInitializer";
 
 export const metadata: Metadata = {
   title: "CalPlog - MY Page",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <Providers>
-        {children}
+        <FirebaseInitializer>
+          {children}
+        </FirebaseInitializer>
       </Providers>
     </html>
   );

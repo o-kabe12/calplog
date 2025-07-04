@@ -22,7 +22,6 @@ export default function Home() {
 
       const ref = collection(db, "users", session.user.email, "records");
       const snapshot = await getDocs(ref);
-      console.log("Fetched records:", snapshot);
 
       const data = snapshot.docs.map((doc) => doc.data() as RecordType);
       // 日付の降順でソート

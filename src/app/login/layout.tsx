@@ -1,3 +1,4 @@
+import { FirebaseInitializer } from "@/components/FirebaseInitializer";
 import { Providers } from "../component/providers";
 
 export default function RootLayout({
@@ -9,7 +10,9 @@ export default function RootLayout({
     <html lang="ja">
       <body>
         <Providers>
-          {children}
+          <FirebaseInitializer>
+            {children}
+          </FirebaseInitializer>
         </Providers>
       </body>
     </html>
