@@ -6,6 +6,23 @@ import { FirebaseInitializer } from "@/components/FirebaseInitializer";
 export const metadata: Metadata = {
   title: "CalPlog - MY Page",
   description: "カロリーとタンパク質を簡単に計算・記録できるアプリです。",
+  keywords: ["カロリー", "タンパク質", "計算", "記録", "アプリ","calplog"],
+  openGraph: {
+    title: "CalPlog",
+    description: "カロリーとタンパク質を簡単に計算・記録できるアプリです。",
+    url: "https://calplog.vercel.app/",
+    siteName: "CalPlog",
+    images: [
+      {
+        url: "https://calplog.vercel.app/ogp.jpg",
+        width: 1280,
+        height: 670,
+        alt: "CalPlog OGP Image"
+      }
+    ],
+    locale: "ja_JP",
+    type: "website"
+  },
 };
 
 export default function RootLayout({
