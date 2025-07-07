@@ -14,7 +14,7 @@ export const sampleFoods: FoodItem[] = [
     proteinPer100g: 24,
   },
   {
-    id: '13',
+    id: '12',
     name: '鶏もも肉（皮付き）',
     caloriesPer100g: 190,
     proteinPer100g: 16.6,
@@ -50,33 +50,31 @@ export const sampleFoods: FoodItem[] = [
     name: 'アボカド',
     caloriesPer100g: 176,
     proteinPer100g: 2.5,
+    unitType: '個', // 1パックあたり
+    perUnit: 150,   // 1つ=150g換算
   },
   {
     id: '8',
-    name: '牛乳',
-    caloriesPer100g: 61,
-    proteinPer100g: 3.3,
-  },
-  {
-    id: '9',
     name: 'バナナ',
     caloriesPer100g: 86,
     proteinPer100g: 1.1,
+    unitType: '個',
+    perUnit: 100,   // 1つ=100g換算
   },
   {
-    id: '10',
+    id: '9',
     name: '牛肉（もも肉、赤身）',
     caloriesPer100g: 165,
     proteinPer100g: 21.7,
   },
   {
-    id: '11',
+    id: '10',
     name: '豚肉（もも肉、脂身つき）',
     caloriesPer100g: 221,
     proteinPer100g: 19.5,
   },
   {
-    id: '12',
+    id: '11',
     name: '納豆',
     caloriesPer100g: 190,
     proteinPer100g: 16.5,

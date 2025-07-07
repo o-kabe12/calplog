@@ -12,7 +12,6 @@ type RecordType = {
 };
 
 export default function Home() {
-
   const { data: session } = useSession();
   const [records, setRecords] = useState<RecordType[]>([]);
 
@@ -24,7 +23,6 @@ export default function Home() {
       const snapshot = await getDocs(ref);
 
       const data = snapshot.docs.map((doc) => doc.data() as RecordType);
-      // 日付の降順でソート
       data.sort((a, b) => b.date.localeCompare(a.date));
       setRecords(data);
     };
@@ -35,24 +33,49 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="py-8 px-4 max-w-[1200px] mx-auto">
-        <h1 className="text-2xl font-bold text-center mb-4">こんにちは！<br />マイページへようこそ</h1>
-        <p className="text-center">ここでは、あなたのログの記録を確認できます。</p>
+      <main className="py-12 px-6 max-w-[1200px] mx-auto">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 text-center mb-3">
+            こんにちは！
+          </h1>
+          <h2 className="text-xl text-gray-600 text-center mb-12">
+            マイページへようこそ
+          </h2>
+          <p className="text-center text-gray-500 mb-12">
+            ここでは、あなたのログの記録を確認できます。
+          </p>
 
-        <h2 className="text-xl font-semibold mt-6 mb-10 text-center">保存された記録</h2>
-        <ul className="space-y-2">
-        {records.map((record) => (
-          <li
-            key={record.date}
-            className="mb-4"
-          >
-            <h3 className="font-semibold mb-2">日付:{record.date}</h3>
-            <div className="w-full bg-gray-100 rounded-md p-4">
-              総摂取カロリー:{record.calories}kcal / 総タンパク質:{record.protein}g
-            </div>
-          </li>
-        ))}
-      </ul>
+          <div className="space-y-4">
+            {records.map((record) => (
+              <div
+                key={record.date}
+                className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:border-gray-200 transition-colors duration-200"
+              >
+                <h3 className="text-sm font-medium text-gray-500 mb-3">
+                  記録日: {record.date}
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="text-sm text-gray-500 mb-1">
+                      総摂取カロリー
+                    </div>
+                    <div className="text-xl font-bold text-gray-900">
+                      {record.calories}
+                      <span className="text-base font-medium ml-1">kcal</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="text-sm text-gray-500 mb-1">総タンパク質</div>
+                    <div className="text-xl font-bold text-gray-900">
+                      {record.protein}
+                      <span className="text-base font-medium ml-1">g</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </main>
     </>
   );

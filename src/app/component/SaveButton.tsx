@@ -31,22 +31,22 @@ export function SaveButton({ result }: { result: { calories: number; protein: nu
   };
 
   return (
-    <>
+    <div className="mt-8">
       {!session ? (
         <Link
           href="/login"
-          className="block w-fit mt-4 mx-auto bg-blue-600 text-white rounded px-4 py-2 hover:opacity-70 cursor-pointer transition duration-300 ease-in-out"
+          className="block w-full max-w-md mx-auto px-6 py-3 bg-gray-900 text-white text-center rounded-lg hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
         >
           ログインして結果を保存
         </Link>
       ) : (
-      <button
-        onClick={handleSave}
-        className="block mt-4 mx-auto bg-blue-600 text-white rounded px-4 py-2 hover:opacity-70 cursor-pointer transition duration-300 ease-in-out"
-      >
-        本日の結果を保存
-      </button>
+        <button
+          onClick={handleSave}
+          className="block w-full max-w-md mx-auto px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
+        >
+          本日の結果を保存
+        </button>
       )}
-    </>
+    </div>
   );
 }

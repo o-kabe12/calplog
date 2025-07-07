@@ -19,15 +19,21 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex flex-col items-center gap-10 justify-center h-screen">
-      <h1 className="text-3xl font-bold text-center">CalPlog</h1>
-      <p>Googleアカウントでログインしてください</p>
-      <button
-        onClick={() => signIn("google")}
-        className="bg-blue-500 text-white rounded p-2 cursor-pointer hover:bg-blue-600 transition duration-300 ease-in-out"
-      >
-        Googleでログイン
-      </button>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
+      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-sm border border-gray-100">
+        <h1 className="text-3xl font-bold text-center text-gray-900 mb-8">
+          CalPlog
+        </h1>
+        <p className="text-center text-gray-600 mb-8">
+          Googleアカウントでログインしてください
+        </p>
+        <button
+          onClick={() => signIn("google")}
+          className="w-full px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2"
+        >
+          Googleでログイン
+        </button>
+      </div>
     </main>
   );
 }

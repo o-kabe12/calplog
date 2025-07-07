@@ -117,109 +117,113 @@ export default function FoodCalculator() {
   };
 
   return (
-    <div className="mt-8 space-y-4 w-full sm:w-fit sm:min-w-[500px] mx-auto">
-          {/* プルダウン入力欄 */}
-          {entries.map((entry, index) => {
-            const food = sampleFoods.find(f => f.id === entry.foodId);
-            const isUnit = food && food.unitType === '個';
-            return (
-              <div key={index} className="flex items-center gap-2 flex-wrap">
-                <select
-                  className="border rounded px-2 py-1 w-full sm:w-auto"
-                  value={entry.foodId}
-                  onChange={e => handleChange(index, "foodId", e.target.value)}
-                >
-                  {sampleFoods.map(food => (
-                    <option key={food.id} value={food.id}>{food.name}</option>
-                  ))}
-                </select>
-                {isUnit ? (
-                  <input
-                    type="number"
-                    min="0"
-                    className="border rounded px-2 py-1 w-24"
-                    placeholder="個数"
-                    value={entry.units || ""}
-                    onChange={e => handleChange(index, "units", e.target.value)}
-                  />
-                ) : (
-                  <input
-                    type="number"
-                    min="0"
-                    className="border rounded px-2 py-1 w-24"
-                    placeholder="グラム数"
-                    value={entry.grams}
-                    onChange={e => handleChange(index, "grams", e.target.value)}
-                  />
-                )}
-                <button
-                  type="button"
-                  className="block bg-red-500 text-white rounded px-3 py-1 cursor-pointer hover:opacity-70 transition duration-300 ease-in-out"
-                  onClick={() => setEntries(entries.filter((_, i) => i !== index))}
-                >－</button>
-              </div>
-            );
-          })}
-          <button
-            type="button"
-            className="block bg-blue-500 text-white rounded px-3 py-1 cursor-pointer hover:opacity-70 transition duration-300 ease-in-out"
-            onClick={addEntry}
-            >＋ 食材を追加</button>
-
-          {/* 自由入力欄 */}
-          <div className="mt-6 mb-2 font-bold">自分で食材を入力</div>
-          {freeEntries.map((entry, index) => (
-            <div key={index} className="flex flex-wrap gap-2 items-end my-4">
-              <input
-                className="block w-full border rounded px-2 py-1 w-32"
-                placeholder="食材名"
-                value={entry.name}
-                onChange={e => handleFreeChange(index, "name", e.target.value)}
-              />
-              <input
-                type="number"
-                min="0"
-                className="border rounded px-2 py-1 w-28"
-                placeholder="カロリー"
-                value={entry.calories}
-                onChange={e => handleFreeChange(index, "calories", e.target.value)}
-              />
-              <input
-                type="number"
-                min="0"
-                className="border rounded px-2 py-1 w-28"
-                placeholder="たんぱく質"
-                value={entry.protein}
-                onChange={e => handleFreeChange(index, "protein", e.target.value)}
-              />
+    <div className="mt-10 space-y-6 w-full sm:w-fit sm:min-w-[500px] mx-auto">
+      {/* プルダウン入力欄 */}
+      <div className="space-y-3">
+        {entries.map((entry, index) => {
+          const food = sampleFoods.find(f => f.id === entry.foodId);
+          const isUnit = food && food.unitType === '個';
+          return (
+            <div key={index} className="flex items-center gap-2 flex-wrap bg-white border border-gray-100 rounded-lg px-4 py-3 shadow-sm">
+              <select
+                className="border border-gray-200 rounded-lg px-3 py-2 w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
+                value={entry.foodId}
+                onChange={e => handleChange(index, "foodId", e.target.value)}
+              >
+                {sampleFoods.map(food => (
+                  <option key={food.id} value={food.id}>{food.name}</option>
+                ))}
+              </select>
+              {isUnit ? (
+                <input
+                  type="number"
+                  min="0"
+                  className="border border-gray-200 rounded-lg px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
+                  placeholder="個数"
+                  value={entry.units || ""}
+                  onChange={e => handleChange(index, "units", e.target.value)}
+                />
+              ) : (
+                <input
+                  type="number"
+                  min="0"
+                  className="border border-gray-200 rounded-lg px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
+                  placeholder="g"
+                  value={entry.grams}
+                  onChange={e => handleChange(index, "grams", e.target.value)}
+                />
+              )}
               <button
                 type="button"
-                className="block bg-red-500 text-white rounded px-3 py-1 cursor-pointer hover:opacity-70 transition duration-300 ease-in-out"
-                onClick={() => setFreeEntries(freeEntries.filter((_, i) => i !== index))}
+                className="ml-auto bg-red-500 text-white rounded-lg px-3 py-2 hover:bg-red-600 transition cursor-pointer"
+                onClick={() => setEntries(entries.filter((_, i) => i !== index))}
               >－</button>
             </div>
-          ))}
-          <button
-            type="button"
-            className="block bg-orange-500 text-white rounded px-3 py-1 cursor-pointer hover:opacity-70 transition duration-300 ease-in-out"
-            onClick={addFreeEntry}
-          >＋ 自由入力欄を追加</button>
+          );
+        })}
+        <button
+          type="button"
+          className="w-full sm:w-auto bg-gray-900 text-white rounded-lg px-4 py-2 hover:bg-gray-800 transition font-semibold cursor-pointer"
+          onClick={addEntry}
+        >＋ 食材を追加</button>
+      </div>
 
-          <button
-            className="block mt-6 mx-auto bg-green-600 text-white rounded px-4 py-2 cursor-pointer hover:opacity-70 transition duration-300 ease-in-out"
-            onClick={handleCalculate}
-          >出力</button>
-          <div ref={resultRef} />
-          {result && (
-            <>
-              <div className="mt-6 w-full bg-gray-100 p-4 rounded">
-                <p className="text-lg font-bold text-center">
-                  総カロリー: {result.calories} kcal ／ 総タンパク質: {result.protein} g
-                </p>
-              </div>
-              <SaveButton result={result} />
-            </>
-          )}
+      {/* 自由入力欄 */}
+      <div className="mt-8 mb-2 font-bold text-gray-900">自分で食材を入力</div>
+      <div className="space-y-3">
+        {freeEntries.map((entry, index) => (
+          <div key={index} className="flex flex-wrap gap-2 items-end bg-white border border-gray-100 rounded-lg px-4 py-3 shadow-sm">
+            <input
+              className="block border border-gray-200 rounded-lg px-3 py-2 w-32 focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
+              placeholder="食材名"
+              value={entry.name}
+              onChange={e => handleFreeChange(index, "name", e.target.value)}
+            />
+            <input
+              type="number"
+              min="0"
+              className="border border-gray-200 rounded-lg px-3 py-2 w-28 focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
+              placeholder="カロリー"
+              value={entry.calories}
+              onChange={e => handleFreeChange(index, "calories", e.target.value)}
+            />
+            <input
+              type="number"
+              min="0"
+              className="border border-gray-200 rounded-lg px-3 py-2 w-28 focus:outline-none focus:ring-2 focus:ring-gray-900 transition"
+              placeholder="たんぱく質"
+              value={entry.protein}
+              onChange={e => handleFreeChange(index, "protein", e.target.value)}
+            />
+            <button
+              type="button"
+              className="ml-auto bg-red-500 text-white rounded-lg px-3 py-2 hover:bg-red-600 transition cursor-pointer"
+              onClick={() => setFreeEntries(freeEntries.filter((_, i) => i !== index))}
+            >－</button>
+          </div>
+        ))}
+        <button
+          type="button"
+          className="w-full sm:w-auto bg-gray-700 text-white rounded-lg px-4 py-2 hover:bg-gray-800 transition font-semibold cursor-pointer"
+          onClick={addFreeEntry}
+        >＋ 自由入力欄を追加</button>
+      </div>
+
+      <button
+        className="block w-full sm:w-auto mt-8 mx-auto bg-green-700 text-white rounded-lg px-6 py-3 font-bold hover:bg-green-800 transition text-lg cursor-pointer"
+        onClick={handleCalculate}
+      >出力</button>
+      <div ref={resultRef} />
+      {result && (
+        <>
+          <div className="mt-8 w-full bg-gray-50 border border-gray-200 p-6 rounded-xl shadow-sm">
+            <p className="text-xl font-bold text-center text-gray-900">
+              総カロリー: <span className="text-green-700">{result.calories} kcal</span> ／ 総タンパク質: <span className="text-blue-700">{result.protein} g</span>
+            </p>
+          </div>
+          <SaveButton result={result} />
+        </>
+      )}
     </div>
   );
 }
