@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./component/providers";
 import { FirebaseInitializer } from "@/components/FirebaseInitializer"; 
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "CalPlog - TOP",
@@ -37,6 +38,7 @@ export default function RootLayout({
           <FirebaseInitializer>
             {children}
           </FirebaseInitializer>
+          <ToastContainer />
           </Providers>
       </body>
     </html>

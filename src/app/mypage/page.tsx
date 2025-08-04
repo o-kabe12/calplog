@@ -1,34 +1,71 @@
 "use client";
 import Header from "../component/Header";
-import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { db } from "@/lib/firebase";
+import useSWR from "swr";
+import RecordCard from "../component/RecordCard";
+import { RecordType } from "@/types";
+import { useState, useMemo } from "react";
+import FilteredTabs from "../component/FilteredTabs";
 
-type RecordType = {
-  date: string;
-  calories: number;
-  protein: number;
+
+const fetchRecords = async (email: string): Promise<RecordType[]> => {
+  const ref = collection(db, "users", email, "records");
+  const snapshot = await getDocs(ref);
+  
+  const data = snapshot.docs.map((doc) => doc.data() as RecordType);
+  data.sort((a, b) => b.date.localeCompare(a.date));
+  return data;
 };
 
-export default function Home() {
+const FILTER_ALL = "all";
+
+export default function MyPage() {
   const { data: session } = useSession();
-  const [records, setRecords] = useState<RecordType[]>([]);
+  
+  const { data: records = [], error, isLoading } = useSWR(
+    session?.user?.email ? `records-${session.user.email}` : null,
+    () => {
+      if (!session?.user?.email) throw new Error("No email found");
+      return fetchRecords(session.user.email);
+    }
+  );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!session?.user?.email) return;
+  const [selectedMonth, setSelectedMonth] = useState<string>(FILTER_ALL);
 
-      const ref = collection(db, "users", session.user.email, "records");
-      const snapshot = await getDocs(ref);
+  const recordMonthList = useMemo(() => {
+    return [...new Set(records.map((record) => record.date.slice(0, 7)))];
+  }, [records]);
 
-      const data = snapshot.docs.map((doc) => doc.data() as RecordType);
-      data.sort((a, b) => b.date.localeCompare(a.date));
-      setRecords(data);
-    };
+  const filteredRecords = useMemo(() => {
+    return selectedMonth === FILTER_ALL 
+      ? records 
+      : records.filter((record) => record.date.slice(0, 7) === selectedMonth);
+  }, [records, selectedMonth]);
 
-    fetchData();
-  }, [session]);
+  const handleMonthClick = (month: string) => {
+    setSelectedMonth(month);
+  };
+
+  const renderPageLayout = (content: React.ReactNode) => (
+    <>
+      <Header />
+      <main className="py-12 px-6 max-w-[1200px] mx-auto">
+        <div className="max-w-2xl mx-auto text-center">
+          {content}
+        </div>
+      </main>
+    </>
+  );
+
+  if (isLoading) {
+    return renderPageLayout(<p className="text-gray-500">読み込み中...</p>);
+  }
+
+  if (error) {
+    return renderPageLayout(<p className="text-red-500">データの読み込みに失敗しました。</p>);
+  }
 
   return (
     <>
@@ -45,34 +82,16 @@ export default function Home() {
             ここでは、あなたのログの記録を確認できます。
           </p>
 
+          <FilteredTabs
+            recordMonthList={recordMonthList}
+            selectedMonth={selectedMonth}
+            handleMonthClick={handleMonthClick}
+            filterAllValue={FILTER_ALL}
+          />
+
           <div className="space-y-4">
-            {records.map((record) => (
-              <div
-                key={record.date}
-                className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:border-gray-200 transition-colors duration-200"
-              >
-                <h3 className="text-sm font-medium text-gray-500 mb-3">
-                  記録日: {record.date}
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <div className="text-sm text-gray-500 mb-1">
-                      総摂取カロリー
-                    </div>
-                    <div className="text-xl font-bold text-gray-900">
-                      {record.calories}
-                      <span className="text-base font-medium ml-1">kcal</span>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <div className="text-sm text-gray-500 mb-1">総タンパク質</div>
-                    <div className="text-xl font-bold text-gray-900">
-                      {record.protein}
-                      <span className="text-base font-medium ml-1">g</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {filteredRecords.map((record) => (
+              <RecordCard key={record.date} record={record} />
             ))}
           </div>
         </div>

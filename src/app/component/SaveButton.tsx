@@ -2,6 +2,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 export function SaveButton({ result }: { result: { calories: number; protein: number } }) {
   const { data: session } = useSession();
@@ -23,10 +24,10 @@ export function SaveButton({ result }: { result: { calories: number; protein: nu
           date: today,
         }
       );
-      alert("保存しました！");
+      toast.success("保存しました！", { autoClose: 1000, hideProgressBar: true });
     } catch (e) {
       console.error(e);
-      alert("保存に失敗しました");
+      toast.error("保存に失敗しました", { autoClose: 1000, hideProgressBar: true });
     }
   };
 

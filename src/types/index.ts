@@ -14,6 +14,24 @@ export interface FoodEntry {
   calculatedProtein: number;
 }
 
+// フード計算用の型定義
+export interface FoodEntryInput {
+  foodId: string;
+  grams: string;
+  units: string;
+}
+
+export interface FreeEntry {
+  name: string;
+  calories: string;
+  protein: string;
+}
+
+export interface CalculationResult {
+  calories: number;
+  protein: number;
+}
+
 export interface DailyRecord {
   id: string;
   userId: string;
@@ -22,3 +40,9 @@ export interface DailyRecord {
   totalCalories: number;
   totalProtein: number;
 }
+
+export interface RecordType {
+  date: string;
+  calories: number;
+  protein: number;
+};

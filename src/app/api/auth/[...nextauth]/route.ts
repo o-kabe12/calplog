@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import { authOptions } from "../../../../lib/authOptions"; // 独立させた設定をインポート
+import { authOptions } from "@/lib/authOptions";
 
 // authOptions を NextAuth に渡す
 const handler = NextAuth(authOptions);
