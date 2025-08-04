@@ -1,9 +1,9 @@
 "use client";
 import Header from "../component/Header";
-import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { db } from "@/lib/firebase";
+import useSWR from "swr";
 
 type RecordType = {
   date: string;
@@ -11,24 +11,57 @@ type RecordType = {
   protein: number;
 };
 
+// Firestoreからデータを取得するfetcher関数
+const fetchRecords = async (email: string): Promise<RecordType[]> => {
+  const ref = collection(db, "users", email, "records");
+  const snapshot = await getDocs(ref);
+  
+  const data = snapshot.docs.map((doc) => doc.data() as RecordType);
+  data.sort((a, b) => b.date.localeCompare(a.date));
+  return data;
+};
+
 export default function Home() {
   const { data: session } = useSession();
-  const [records, setRecords] = useState<RecordType[]>([]);
+  
+  // SWRでデータフェッチング（useEffectを使わない）
+  const { data: records = [], error, isLoading } = useSWR(
+    session?.user?.email ? `records-${session.user.email}` : null,
+    () => {
+      if (!session?.user?.email) throw new Error("No email found");
+      return fetchRecords(session.user.email);
+    }
+  );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!session?.user?.email) return;
+  // ローディング状態を表示
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <main className="py-12 px-6 max-w-[1200px] mx-auto">
+          <div className="max-w-2xl mx-auto text-center">
+            <p className="text-gray-500">読み込み中...</p>
+          </div>
+        </main>
+      </>
+    );
+  }
 
-      const ref = collection(db, "users", session.user.email, "records");
-      const snapshot = await getDocs(ref);
+  // エラー状態を表示
+  if (error) {
+    return (
+      <>
+        <Header />
+        <main className="py-12 px-6 max-w-[1200px] mx-auto">
+          <div className="max-w-2xl mx-auto text-center">
+            <p className="text-red-500">データの読み込みに失敗しました。</p>
+          </div>
+        </main>
+      </>
+    );
+  }
 
-      const data = snapshot.docs.map((doc) => doc.data() as RecordType);
-      data.sort((a, b) => b.date.localeCompare(a.date));
-      setRecords(data);
-    };
-
-    fetchData();
-  }, [session]);
+  console.log(records);
 
   return (
     <>
