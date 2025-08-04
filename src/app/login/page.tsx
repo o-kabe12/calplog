@@ -29,7 +29,7 @@ export default function LoginPage() {
         </p>
         <button
           onClick={() => signIn("google")}
-          className="w-full px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2"
+          className="w-full px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2 md:cursor-pointer"
         >
           Googleでログイン
         </button>

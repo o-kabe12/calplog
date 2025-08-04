@@ -14,12 +14,12 @@ export default function Header() {
           pathname === "/mypage" ? (
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="px-5 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200"
+              className="px-5 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 md:cursor-pointer"
             >
               ログアウト
             </button>
           ) : (
-            <Link href="/mypage/" className="flex items-center gap-2 px-5 py-2 bg-blue-700 text-white rounded-lg font-semibold shadow-sm hover:bg-blue-800 transition-colors duration-200">
+            <Link href="/mypage/" className="flex items-center gap-2 px-5 py-2 bg-blue-700 text-white rounded-lg font-semibold shadow-sm hover:bg-blue-800 transition-colors duration-200 md:cursor-pointer">
               <span>
                 <Image src="/icon-user.svg" alt="User Icon"  width={20} height={20}/>
               </span>

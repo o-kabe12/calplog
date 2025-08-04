@@ -204,7 +204,7 @@ export default function FoodCalculator() {
         ))}
         <button
           type="button"
-          className="w-full sm:w-auto bg-gray-700 text-white rounded-lg px-4 py-2 hover:bg-gray-800 transition font-semibold cursor-pointer"
+          className="w-full sm:w-auto bg-gray-900 text-white rounded-lg px-4 py-2 hover:bg-gray-800 transition font-semibold cursor-pointer"
           onClick={addFreeEntry}
         >＋ 自由入力欄を追加</button>
       </div>
