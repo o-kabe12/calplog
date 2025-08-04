@@ -22,3 +22,9 @@ export interface DailyRecord {
   totalCalories: number;
   totalProtein: number;
 }
+
+export interface RecordType {
+  date: string;
+  calories: number;
+  protein: number;
+};
