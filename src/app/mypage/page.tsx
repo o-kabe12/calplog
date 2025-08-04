@@ -6,8 +6,8 @@ import { db } from "@/lib/firebase";
 import useSWR from "swr";
 import RecordCard from "../component/RecordCard";
 import { RecordType } from "@/types";
-import { useState } from "react";
-import FilteredRecordsTabs from "../component/FilteredTabs";
+import { useState, useMemo } from "react";
+import FilteredTabs from "../component/FilteredTabs";
 
 
 const fetchRecords = async (email: string): Promise<RecordType[]> => {
@@ -19,7 +19,9 @@ const fetchRecords = async (email: string): Promise<RecordType[]> => {
   return data;
 };
 
-export default function Home() {
+const FILTER_ALL = "all";
+
+export default function MyPage() {
   const { data: session } = useSession();
   
   const { data: records = [], error, isLoading } = useSWR(
@@ -30,39 +32,39 @@ export default function Home() {
     }
   );
 
-  const recordMonthList = [...new Set(records.map((record) => record.date.slice(0, 7)))];
-  const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const [selectedMonth, setSelectedMonth] = useState<string>(FILTER_ALL);
+
+  const recordMonthList = useMemo(() => {
+    return [...new Set(records.map((record) => record.date.slice(0, 7)))];
+  }, [records]);
+
+  const filteredRecords = useMemo(() => {
+    return selectedMonth === FILTER_ALL 
+      ? records 
+      : records.filter((record) => record.date.slice(0, 7) === selectedMonth);
+  }, [records, selectedMonth]);
 
   const handleMonthClick = (month: string) => {
     setSelectedMonth(month);
-  }
+  };
 
-  const filteredRecords = selectedMonth ? records.filter((record) => record.date.slice(0, 7) === selectedMonth) : records;
+  const renderPageLayout = (content: React.ReactNode) => (
+    <>
+      <Header />
+      <main className="py-12 px-6 max-w-[1200px] mx-auto">
+        <div className="max-w-2xl mx-auto text-center">
+          {content}
+        </div>
+      </main>
+    </>
+  );
 
   if (isLoading) {
-    return (
-      <>
-        <Header />
-        <main className="py-12 px-6 max-w-[1200px] mx-auto">
-          <div className="max-w-2xl mx-auto text-center">
-            <p className="text-gray-500">読み込み中...</p>
-          </div>
-        </main>
-      </>
-    );
+    return renderPageLayout(<p className="text-gray-500">読み込み中...</p>);
   }
 
   if (error) {
-    return (
-      <>
-        <Header />
-        <main className="py-12 px-6 max-w-[1200px] mx-auto">
-          <div className="max-w-2xl mx-auto text-center">
-            <p className="text-red-500">データの読み込みに失敗しました。</p>
-          </div>
-        </main>
-      </>
-    );
+    return renderPageLayout(<p className="text-red-500">データの読み込みに失敗しました。</p>);
   }
 
   return (
@@ -80,10 +82,11 @@ export default function Home() {
             ここでは、あなたのログの記録を確認できます。
           </p>
 
-          <FilteredRecordsTabs
+          <FilteredTabs
             recordMonthList={recordMonthList}
             selectedMonth={selectedMonth}
             handleMonthClick={handleMonthClick}
+            filterAllValue={FILTER_ALL}
           />
 
           <div className="space-y-4">
